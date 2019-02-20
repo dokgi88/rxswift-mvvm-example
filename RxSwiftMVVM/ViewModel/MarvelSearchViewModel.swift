@@ -11,6 +11,19 @@ import RxSwift
 
 class MarvelSearchViewModel {
     
+    struct Input {
+        
+    }
+    struct Output {
+        
+    }
+    
+    // MARK: - Internal methods
+    
+    func transform(input: Input) -> Output {
+        return Output()
+    }
+    
     let selectHero: AnyObserver<MarvelHeroModel>
     let showHero: Observable<MarvelHeroModel>
     var heros = BehaviorRelay<[MarvelHeroModel]>(value: [])
