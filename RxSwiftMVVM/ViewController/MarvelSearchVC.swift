@@ -18,7 +18,6 @@ class MarvelSearchVC: ViewController {
     private let disposeBag = DisposeBag()
     private var viewModel = MarvelSearchViewModel()
     
-    
     // MARK: - UI Components
     
     private let searchTextField = UITextField().then {
