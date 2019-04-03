@@ -8,4 +8,5 @@ target 'RxSwiftMVVM' do
     pod 'Alamofire'
     pod 'Kingfisher'
     pod 'CryptoSwift'
+    pod 'Result', '~> 4.0.0'
 end
