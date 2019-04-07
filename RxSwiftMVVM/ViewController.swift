@@ -2,36 +2,55 @@
 //  ViewController.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 13/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 13/12/2018.
 //
 
 import UIKit
 
 class ViewController: UIViewController {
+    
+    private let indicatorView = UIActivityIndicatorView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.style = .whiteLarge
+        $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        $0.startAnimating()
+        $0.alpha = 0
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .black
-        
-        let logoView = UIImageView(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
-        logoView.image = UIImage(named: "Marvel_logo.jpg")
-        logoView.contentMode = .scaleAspectFit
-        
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barTintColor = .black
-        navigationController?.navigationBar.topItem?.titleView = logoView
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        setProperties()
     }
     
     public func setTitle(_ text: String) {
         title = text
     }
+    
+    public func showLoading() {
+        view.addSubview(indicatorView)
+        
+        indicatorView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        indicatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        indicatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        indicatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        indicatorView.alpha = 1
+    }
+    
+    public func hideLoading() {
+        indicatorView.alpha = 0
+        
+        indicatorView.removeFromSuperview()
+    }
 
     private func getClassName(_ anyClass: AnyObject) -> String {
         return String(describing: type(of: anyClass))
     }
+    
+    private func setProperties() {
+        view.backgroundColor = .black
+    }
+    
 }
 
