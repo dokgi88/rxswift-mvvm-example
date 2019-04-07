@@ -25,6 +25,7 @@
 		ED8583442259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8583432259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift */; };
 		ED8583472259DE9500CACD59 /* MarvelSearchNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8583462259DE9500CACD59 /* MarvelSearchNavigator.swift */; };
 		ED858349225A384500CACD59 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED858348225A384500CACD59 /* NavigationController.swift */; };
+		ED85834C225A3EF900CACD59 /* ObservableType-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85834B225A3EF900CACD59 /* ObservableType-Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		ED8583432259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelSearchTVCellViewModel.swift; sourceTree = "<group>"; };
 		ED8583462259DE9500CACD59 /* MarvelSearchNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelSearchNavigator.swift; sourceTree = "<group>"; };
 		ED858348225A384500CACD59 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		ED85834B225A3EF900CACD59 /* ObservableType-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ObservableType-Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				3AF9B59E21C1DDEF0096D1C3 /* ViewController.swift */,
 				3AF9B5A321C1DDF00096D1C3 /* Assets.xcassets */,
 				3AF9B5B321C1DF220096D1C3 /* Const */,
+				ED85834A225A3ED800CACD59 /* Extension */,
 				3AF9B5A521C1DDF00096D1C3 /* LaunchScreen.storyboard */,
 				3AF9B5A021C1DDEF0096D1C3 /* Main.storyboard */,
 				3AF9B5B121C1DF0A0096D1C3 /* Model */,
@@ -186,6 +189,14 @@
 				ED8583462259DE9500CACD59 /* MarvelSearchNavigator.swift */,
 			);
 			path = Navigator;
+			sourceTree = "<group>";
+		};
+		ED85834A225A3ED800CACD59 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				ED85834B225A3EF900CACD59 /* ObservableType-Extension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,6 +330,7 @@
 			files = (
 				3A4834DB21CC776B00D28416 /* MarvelDescriptionViewModel.swift in Sources */,
 				ED8583442259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift in Sources */,
+				ED85834C225A3EF900CACD59 /* ObservableType-Extension.swift in Sources */,
 				3A4834D521CC761B00D28416 /* MarvelSearchTVCell.swift in Sources */,
 				3AF9B5B721C1E0C70096D1C3 /* AppDefinition.swift in Sources */,
 				3A4834DD21CC778700D28416 /* MarvelSearchViewModel.swift in Sources */,
