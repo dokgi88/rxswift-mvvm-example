@@ -2,44 +2,58 @@
 //  MarvelDescriptionViewModel.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
+import RxCocoa
 import RxSwift
 
-class MarvelDescriptionViewModel {
+final class MarvelDescriptionViewModel {
     
-    var thumbnail: Observable<URL>
-    var name: Observable<String>
-    var description: Observable<NSAttributedString>
-    var hero: MarvelHeroModel? {
-        didSet {
-            guard let hero = hero else {return}
-            
-            if let thumbnail = hero.thumbnail, let url = URL(string: thumbnail) {
-                let thumbnailUrl = BehaviorSubject<URL>(value: url)
-                self.thumbnail = thumbnailUrl.asObservable()
-            }
-            if let name = hero.name, let desc = hero.description {
-                let description = desc.count > 0 ? desc:"Not Description"
-                let attrDescription = convertDescription(name: name, desc: description)
-                let tempDescription = BehaviorSubject<NSAttributedString>(value: attrDescription)
-                let tempName = BehaviorSubject<String>(value: name)
-                self.name = tempName.asObserver()
-                self.description = tempDescription.asObservable()
-            }
-        }
+    private let model: MarvelHeroModel
+    
+    init(model: MarvelHeroModel) {
+        self.model = model
     }
     
-    init() {
-        thumbnail = PublishSubject<URL>()
-        name = PublishSubject<String>()
-        description = PublishSubject<NSAttributedString>()
+    struct Input {
+        let trigger: Driver<Void>
+    }
+    struct Output {
+        let thumbnail: Driver<URL>
+        let name: Driver<String>
+        let description: Driver<NSAttributedString>
     }
     
-    private func convertDescription(name: String, desc: String) -> NSAttributedString {
-        let originText = "\(name)\n\n\(desc)"
+    // MARK: - Internal Method
+    
+    func transform(input: Input) -> Output {
+        let thumbnail: Driver<URL> = input.trigger
+            .flatMapLatest { [weak self] (_) in
+                guard let self = self else {return Driver.empty()}
+                guard let thumbnail = self.model.thumbnail, let url = URL(string: thumbnail) else {return Driver.empty()}
+                return Driver.just(url)
+            }
+        let name: Driver<String> = input.trigger
+            .flatMapLatest { [weak self] (_) in
+                guard let self = self, let name = self.model.name else {return Driver.empty()}
+                return Driver.just(name)
+            }
+        let description: Driver<NSAttributedString> = input.trigger
+            .flatMapLatest { [weak self] (_) in
+                guard let self = self else {return Driver.empty()}
+                return Driver.just(self.getDescription())
+            }
+        
+        return Output(thumbnail: thumbnail, name: name, description: description)
+    }
+    
+    // MARK: - Private Method
+    
+    private func getDescription() -> NSAttributedString {
+        guard let name = model.name, let desc = model.description else {return NSAttributedString(string: "Not Description")}
+        let description = desc.count > 0 ? desc:"Not Description"
+        let originText = "\(name)\n\n\(description)"
         let range = originText.lowercased().range(of: name.lowercased())
         let attributeString = NSMutableAttributedString(string: originText,
                                                         attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .semibold), NSAttributedString.Key.foregroundColor:UIColor.black])

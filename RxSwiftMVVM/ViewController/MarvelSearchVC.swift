@@ -2,21 +2,19 @@
 //  MarvelSearchVC.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
 import RxCocoa
 import RxSwift
 
-class MarvelSearchVC: ViewController {
+final class MarvelSearchVC: ViewController {
     
-    let showMarvelDescriptionVC = "showMarvelDescriptionVC"
-
     // MARK: - Properties
-    
+
     private let disposeBag = DisposeBag()
-    private var viewModel = MarvelSearchViewModel()
+    private var searchText = PublishRelay<String>()
+    private lazy var viewModel = MarvelSearchViewModel(navigator: .init(self.navigationController))
     
     // MARK: - UI Components
     
@@ -39,13 +37,7 @@ class MarvelSearchVC: ViewController {
         $0.textColor = .white
         $0.textAlignment = .center
         $0.font = .boldSystemFont(ofSize: 30)
-    }
-    private let indicatorView = UIActivityIndicatorView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.style = .whiteLarge
-        $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        $0.startAnimating()
-        $0.alpha = 0
+        $0.isHidden = false
     }
     
     // MARK: - Overridden: BackViewController
@@ -53,69 +45,56 @@ class MarvelSearchVC: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bindView()
+        bindViewModel()
         setProperties()
-        setupBindings()
         setupUI()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == showMarvelDescriptionVC,
-            let controller = segue.destination as? MarvelDescriptionVC,
-            let hero = sender as? MarvelHeroModel else {return}
-        
-        controller.hero = hero
     }
     
     // MARK: - Private methods
     
-    private func setProperties() {
-        tableView.backgroundColor = .clear
-        tableView.separatorStyle = .none
-        tableView.rx.setDelegate(self).disposed(by: disposeBag)
-        tableView.register(MarvelSearchTVCell.self, forCellReuseIdentifier: MarvelSearchTVCell.reuseIdentifier)
-    }
-    
-    private func setupBindings() {
-        viewModel.heros
-            .asObservable()
-            .do(onNext: { (heros) in
-                self.indicatorView.alpha = 0
-                self.emptyLabel.isHidden = heros.count > 0 ? true:false
-            })
-            .bind(to: tableView.rx.items(cellIdentifier: MarvelSearchTVCell.reuseIdentifier, cellType: MarvelSearchTVCell.self)) { (row, hero, cell) in
-                cell.hero = hero
-            }.disposed(by: disposeBag)
-        
-        viewModel.showHero
-            .bind { (hero) in
-                self.performSegue(withIdentifier: self.showMarvelDescriptionVC, sender: hero)
-            }
-            .disposed(by: disposeBag)
-        
-        tableView.rx.modelSelected(MarvelHeroModel.self)
-            .bind(to: viewModel.selectHero)
-            .disposed(by: disposeBag)
-        
+    private func bindView() {
         searchTextField.rx.controlEvent(.editingDidEndOnExit)
             .bind { [weak self] (event) in
-                guard let weakSelf = self else {return}
-                guard let text = weakSelf.searchTextField.text else {return}
+                guard let self = self, let text = self.searchTextField.text else {return}
                 
-                weakSelf.indicatorView.alpha = 1
+                self.showLoading()
                 UIView.animate(withDuration: 0.3, animations: {
-                    weakSelf.tableView.contentOffset = .zero
+                    self.tableView.contentOffset = .zero
                 }, completion: { (_) in
-                    weakSelf.viewModel.search = text
+                    self.searchText.accept(text)
                 })
             }
             .disposed(by: disposeBag)
+    }
+
+    private func bindViewModel() {
+        let input = MarvelSearchViewModel.Input(searchText: searchText.asDriverComplete(),
+                                                modelSelected: tableView.rx.modelSelected(MarvelHeroModel.self))
+        
+        let output = viewModel.transform(input: input)
+        output.heros
+            .do(onNext: { [weak self] (heros) in
+                guard let self = self else {return}
+                self.hideLoading()
+                self.emptyLabel.isHidden = heros.count > 0 ? true:false
+            })
+            .bind(to: tableView.rx.items(cellIdentifier: MarvelSearchTVCell.reuseIdentifier, cellType: MarvelSearchTVCell.self)) { (row, hero, cell) in
+                cell.configure(viewModel: .init(model: hero))
+            }.disposed(by: disposeBag)
+    }
+    
+    private func setProperties() {
+        tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        tableView.register(MarvelSearchTVCell.self, forCellReuseIdentifier: MarvelSearchTVCell.reuseIdentifier)
     }
     
     private func setupUI() {
         view.addSubview(tableView)
         view.addSubview(emptyLabel)
         view.addSubview(searchTextField)
-        view.addSubview(indicatorView)
         layout()
     }
     
@@ -140,11 +119,6 @@ extension MarvelSearchVC {
         emptyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         emptyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         emptyLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        indicatorView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
-        indicatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        indicatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        indicatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 }
 

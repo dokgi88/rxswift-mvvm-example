@@ -3,7 +3,6 @@
 //  RxSwiftMVVM
 //
 //  Created by soom on 07/04/2019.
-//  Copyright © 2019 cashwalk. All rights reserved.
 //
 
 import RxCocoa
@@ -24,6 +23,8 @@ final class MarvelSearchTVCellViewModel {
         let name: Driver<String>
         let thumbnail: Driver<URL>
     }
+    
+    // MARK: - Internal Method
     
     func transform(input: Input) -> Output {
         let name: Driver<String> = input.trigger

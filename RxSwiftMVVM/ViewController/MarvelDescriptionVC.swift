@@ -2,31 +2,23 @@
 //  MarvelDescriptionVC.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
 import RxCocoa
 import RxSwift
 import Kingfisher
 
-class MarvelDescriptionVC: ViewController {
+final class MarvelDescriptionVC: ViewController {
 
     // MARK: - NSLayoutConstraints
     
     private var containerViewTop: NSLayoutConstraint!
     
     // MARK: - Properties
-    
-    var hero: MarvelHeroModel? {
-        didSet {
-            guard let hero = hero else {return}
-            
-            viewModel.hero = hero
-        }
-    }
+
     private let disposeBag = DisposeBag()
-    private var viewModel = MarvelDescriptionViewModel()
+    private var viewModel: MarvelDescriptionViewModel!
     
     // MARK: - UI Components
     
@@ -45,7 +37,6 @@ class MarvelDescriptionVC: ViewController {
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = .boldSystemFont(ofSize: 16)
         $0.backgroundColor = UIColor.white.withAlphaComponent(0.7)
-        $0.layer.cornerRadius = 3
         $0.isSelected = true
     }
     private let heroDescTextView = UITextView().then {
@@ -55,20 +46,32 @@ class MarvelDescriptionVC: ViewController {
         $0.clipsToBounds = true
     }
     
+    init(viewModel: MarvelDescriptionViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+        showLoading()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
     // MARK: - Overridden: ParentClass
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupBinding()
+        bindView()
+        bindViewModel()
         setupUI()
     }
     
     // MARK: - Private methods
     
-    private func setupBinding() {
+    private func bindView() {
         descriptionButton.rx.tap
-            .bind {
+            .bind { [weak self] in
+                guard let self = self else {return}
                 let height = self.descriptionButton.isSelected ? 0:-(self.view.bounds.width-100)
                 
                 UIView.animate(withDuration: 0.3, animations: {
@@ -79,23 +82,25 @@ class MarvelDescriptionVC: ViewController {
                 }
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func bindViewModel() {
+        let viewDidAppear = rx.sentMessage(#selector(UIViewController.viewDidAppear(_:))).take(1).mapToVoid().asDriverComplete()
+        let input = MarvelDescriptionViewModel.Input(trigger: viewDidAppear)
         
-        viewModel.name
-            .bind { (name) in
-                self.title = name
-            }
-            .disposed(by: disposeBag)
-        
-        viewModel.thumbnail
-            .bind { (url) in
+        let output = viewModel.transform(input: input)
+        output.thumbnail
+            .drive(onNext: { [weak self] (url) in
+                guard let self = self else {return}
                 self.heroImageView.kf.setImage(with: url)
-            }
+                self.hideLoading()
+            })
             .disposed(by: disposeBag)
-        
-        viewModel.description
-            .bind { (description) in
-                self.heroDescTextView.attributedText = description
-            }
+        output.name
+            .drive(rx.title)
+            .disposed(by: disposeBag)
+        output.description
+            .drive(heroDescTextView.rx.attributedText)
             .disposed(by: disposeBag)
     }
     

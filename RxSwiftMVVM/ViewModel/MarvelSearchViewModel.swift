@@ -2,49 +2,59 @@
 //  MarvelSearchViewModel.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
 import RxCocoa
 import RxSwift
 
-class MarvelSearchViewModel {
+final class MarvelSearchViewModel {
+    
+    // MARK: - Properties
+    
+    private var disposeBag = DisposeBag()
+    private var heros = PublishRelay<[MarvelHeroModel]>()
+    private let navigator: MarvelSearchNavigator
+    
+    init(navigator: MarvelSearchNavigator) {
+        self.navigator = navigator
+    }
     
     struct Input {
-        
+        let searchText: Driver<String>
+        let modelSelected: ControlEvent<MarvelHeroModel>
     }
     struct Output {
-        
+        let heros: Observable<[MarvelHeroModel]>
     }
     
     // MARK: - Internal methods
     
     func transform(input: Input) -> Output {
-        return Output()
-    }
-    
-    let selectHero: AnyObserver<MarvelHeroModel>
-    let showHero: Observable<MarvelHeroModel>
-    var heros = BehaviorRelay<[MarvelHeroModel]>(value: [])
-    var behaHero = BehaviorSubject<[MarvelHeroModel]>(value: [])
-    var search: String = "" {
-        didSet {
-            MarvelService().getCharacters(name: search, offset: 20) { (error, result) in
-                guard error == nil, let result = result, result.count > 0 else {
-                    self.heros.accept([])
-                    return
-                }
-                self.heros.accept(result)
+        input.searchText
+            .drive(onNext: { [weak self] (searchText) in
+                guard let self = self else {return}
+                self.requestHero(searchText: searchText)
+            })
+            .disposed(by: disposeBag)
+        input.modelSelected
+            .bind { [weak self] (model) in
+                guard let self = self else {return}
+                self.navigator.showDescription(model: model)
             }
-        }
+            .disposed(by: disposeBag)
+        
+        return Output(heros: heros.asObservable())
     }
     
-    init() {
-        self.search = ""
-        let tempSelectHero = PublishSubject<MarvelHeroModel>()
-        selectHero =  tempSelectHero.asObserver()
-        showHero = tempSelectHero.asObservable().map({$0})
+    // MARK: - Private Method
+    
+    private func requestHero(searchText: String) {
+        MarvelService().getCharacters(name: searchText, offset: 20) { [weak self] (error, result) in
+            guard let self = self else {return}
+            guard error == nil, let result = result, result.count > 0 else {return self.heros.accept([])}
+            self.heros.accept(result)
+        }
     }
     
 }
