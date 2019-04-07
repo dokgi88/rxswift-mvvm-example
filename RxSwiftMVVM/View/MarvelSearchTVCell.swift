@@ -2,14 +2,15 @@
 //  MarvelSearchTVCell.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
 import UIKit
 
-import Then
 import Kingfisher
+import RxCocoa
+import RxSwift
+import Then
 
 class MarvelSearchTVCell: UITableViewCell {
     
@@ -19,19 +20,8 @@ class MarvelSearchTVCell: UITableViewCell {
     
     // MARK: - Properties
     
-    var hero: MarvelHeroModel? {
-        didSet {
-            guard let hero = hero else {return}
-            
-            if let thumnail = hero.thumbnail, let url = URL(string: thumnail) {
-                print("//zz herourl : \(url)")
-                heroImageView.kf.setImage(with: url)
-            }
-            if let name = hero.name {
-                heroTitleLabel.text = name
-            }
-        }
-    }
+    private var disposeBag = DisposeBag()
+    private var viewModel: MarvelSearchTVCellViewModel!
     
     // MARK: - UI Components
     
@@ -65,6 +55,27 @@ class MarvelSearchTVCell: UITableViewCell {
     override func prepareForReuse() {
         heroImageView.image = nil
         heroTitleLabel.text = nil
+    }
+    
+    func configure(viewModel: MarvelSearchTVCellViewModel) {
+        self.viewModel = viewModel
+        bindViewModel()
+    }
+    
+    private func bindViewModel() {
+        let layoutSubviews = rx.sentMessage(#selector(UITableViewCell.layoutSubviews)).take(1).mapToVoid().asDriverComplete()
+        let input = MarvelSearchTVCellViewModel.Input(trigger: layoutSubviews)
+        
+        let output = viewModel.transform(input: input)
+        output.thumbnail
+            .drive(onNext: { [weak self] (url) in
+                guard let self = self else {return}
+                self.heroImageView.kf.setImage(with: url)
+            })
+            .disposed(by: disposeBag)
+        output.name
+            .drive(heroTitleLabel.rx.text)
+            .disposed(by: disposeBag)
     }
     
     private func setProperties() {
