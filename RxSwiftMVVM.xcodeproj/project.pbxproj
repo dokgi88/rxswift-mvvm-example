@@ -24,6 +24,7 @@
 		9005716B9B42E868A65FF0AC /* Pods_RxSwiftMVVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EABD88FABAB27129E8DD339D /* Pods_RxSwiftMVVM.framework */; };
 		ED8583442259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8583432259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift */; };
 		ED8583472259DE9500CACD59 /* MarvelSearchNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8583462259DE9500CACD59 /* MarvelSearchNavigator.swift */; };
+		ED858349225A384500CACD59 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED858348225A384500CACD59 /* NavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		EABD88FABAB27129E8DD339D /* Pods_RxSwiftMVVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxSwiftMVVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED8583432259C6F000CACD59 /* MarvelSearchTVCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelSearchTVCellViewModel.swift; sourceTree = "<group>"; };
 		ED8583462259DE9500CACD59 /* MarvelSearchNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelSearchNavigator.swift; sourceTree = "<group>"; };
+		ED858348225A384500CACD59 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 			children = (
 				3AF9B5A821C1DDF00096D1C3 /* Info.plist */,
 				3AF9B59C21C1DDEF0096D1C3 /* AppDelegate.swift */,
+				ED858348225A384500CACD59 /* NavigationController.swift */,
 				3AF9B59E21C1DDEF0096D1C3 /* ViewController.swift */,
 				3AF9B5A321C1DDF00096D1C3 /* Assets.xcassets */,
 				3AF9B5B321C1DF220096D1C3 /* Const */,
@@ -322,6 +325,7 @@
 				3A4834D721CC772400D28416 /* MarvelDescriptionVC.swift in Sources */,
 				ED8583472259DE9500CACD59 /* MarvelSearchNavigator.swift in Sources */,
 				3AF9B59F21C1DDEF0096D1C3 /* ViewController.swift in Sources */,
+				ED858349225A384500CACD59 /* NavigationController.swift in Sources */,
 				3A4834D121CC75A300D28416 /* MarvelService.swift in Sources */,
 				3A4834D921CC774F00D28416 /* MarvelSearchVC.swift in Sources */,
 				3AF9B59D21C1DDEF0096D1C3 /* AppDelegate.swift in Sources */,

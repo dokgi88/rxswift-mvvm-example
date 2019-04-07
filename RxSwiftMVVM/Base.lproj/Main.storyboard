@@ -32,7 +32,7 @@
         <!--Navigation Controller-->
         <scene sceneID="wWl-qs-yne">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vgV-3i-wRe" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vgV-3i-wRe" customClass="NavigationController" customModule="RxSwiftMVVM" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="pjU-Fd-SOr">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
