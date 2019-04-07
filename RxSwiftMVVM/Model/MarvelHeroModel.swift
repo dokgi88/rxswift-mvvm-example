@@ -2,8 +2,7 @@
 //  MarvelHeroModel.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
 import SwiftyJSON
@@ -25,3 +24,21 @@ class MarvelHeroModel {
     }
 }
 
+struct MarvelHeroData: Decodable {
+    let data: MarvelHeroResult
+}
+
+struct MarvelHeroResult: Decodable {
+    let results: [HeroModel]
+}
+
+struct HeroModel: Decodable {
+    let name: String
+    let description: String
+    let thumbnail: HeroThumbnail
+}
+
+struct HeroThumbnail: Decodable {
+    let path: String
+    let `extension`: String
+}
