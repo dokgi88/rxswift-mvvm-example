@@ -2,13 +2,12 @@
 //  MarvelService.swift
 //  RxSwiftMVVM
 //
-//  Created by cashwalk on 21/12/2018.
-//  Copyright © 2018 cashwalk. All rights reserved.
+//  Created by soom on 21/12/2018.
 //
 
 import Alamofire
 import CryptoSwift
-import RxSwift
+import RxCocoa
 import SwiftyJSON
 
 class MarvelService {
