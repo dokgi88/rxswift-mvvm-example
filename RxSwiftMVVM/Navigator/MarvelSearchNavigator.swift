@@ -3,7 +3,6 @@
 //  RxSwiftMVVM
 //
 //  Created by soom on 07/04/2019.
-//  Copyright © 2019 cashwalk. All rights reserved.
 //
 
 import UIKit
@@ -19,7 +18,7 @@ final class MarvelSearchNavigator {
     // MARK: - Internal Method
     
     func showDescription(model: MarvelHeroModel) {
-        let controller = MarvelDescriptionVC()
+        let controller = MarvelDescriptionVC(viewModel: .init(model: model))
         navigationController?.show(controller, sender: nil)
     }
     
