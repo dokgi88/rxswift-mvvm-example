@@ -3,8 +3,8 @@
 ![Swift](https://img.shields.io/badge/Swift-4.2-orange.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://raw.githubusercontent.com/dokgi88/rxswift-mvvm-example/master/LICENSE)
 
-Marvel API example with MVVM Architecture pattern using RxSwift.
-
+Marvel API example with MVVM Architecture pattern using RxSwift.<br/>
+[Clean Architecture](https://github.com/sergdort/CleanArchitectureRxSwift) partial application
 
 ## Example
 
